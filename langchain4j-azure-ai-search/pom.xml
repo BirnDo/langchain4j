@@ -6,10 +6,14 @@
         <groupId>dev.langchain4j</groupId>
         <artifactId>langchain4j-parent</artifactId>
         <version>1.0.0-beta4-SNAPSHOT</version>
-        <relativePath>../langchain4j-parent/pom.xml</relativePath>
+        <!-- <relativePath>../langchain4j-parent/pom.xml</relativePath> -->
+        <relativePath></relativePath>
+        <!-- modified -->
     </parent>
 
     <artifactId>langchain4j-azure-ai-search</artifactId>
+    <version>1.0.0-beta4-SNAPSHOT</version>
+    <!-- modified -->
     <name>LangChain4j :: Integration :: Azure AI Search</name>
 
     <properties>

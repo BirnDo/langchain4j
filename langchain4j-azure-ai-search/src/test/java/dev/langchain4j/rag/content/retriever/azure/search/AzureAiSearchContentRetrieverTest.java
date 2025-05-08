@@ -4,10 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 import com.azure.core.credential.AzureKeyCredential;
 import com.azure.core.credential.BasicAuthenticationCredential;
@@ -55,6 +52,7 @@ class AzureAiSearchContentRetrieverTest {
                     0,
                     AzureAiSearchQueryType.VECTOR,
                     null,
+                    null,
                     null);
             fail("Expected IllegalArgumentException to be thrown");
         } catch (IllegalArgumentException e) {
@@ -75,6 +73,7 @@ class AzureAiSearchContentRetrieverTest {
                     3,
                     0,
                     AzureAiSearchQueryType.VECTOR,
+                    null,
                     null,
                     null);
             fail("Expected IllegalArgumentException to be thrown");
@@ -97,6 +96,7 @@ class AzureAiSearchContentRetrieverTest {
                     0,
                     AzureAiSearchQueryType.VECTOR,
                     null,
+                    null,
                     null);
             fail("Expected IllegalArgumentException to be thrown");
         } catch (IllegalArgumentException e) {
@@ -117,6 +117,7 @@ class AzureAiSearchContentRetrieverTest {
                     3,
                     0,
                     AzureAiSearchQueryType.VECTOR,
+                    null,
                     null,
                     null);
             fail("Expected IllegalArgumentException to be thrown");
@@ -140,6 +141,7 @@ class AzureAiSearchContentRetrieverTest {
                     0,
                     AzureAiSearchQueryType.FULL_TEXT,
                     null,
+                    null,
                     null);
             fail("Expected IllegalArgumentException to be thrown");
         } catch (IllegalArgumentException e) {
@@ -160,6 +162,7 @@ class AzureAiSearchContentRetrieverTest {
                     3,
                     0,
                     AzureAiSearchQueryType.VECTOR,
+                    null,
                     null,
                     null);
             fail("Expected IllegalArgumentException to be thrown");
@@ -241,6 +244,7 @@ class AzureAiSearchContentRetrieverTest {
                 3,
                 0.5,
                 AzureAiSearchQueryType.VECTOR,
+                null,
                 null,
                 null));
 

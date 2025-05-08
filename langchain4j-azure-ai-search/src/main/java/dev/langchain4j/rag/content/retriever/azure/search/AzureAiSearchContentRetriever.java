@@ -10,7 +10,12 @@ import com.azure.core.credential.AzureKeyCredential;
 import com.azure.core.credential.TokenCredential;
 import com.azure.core.util.Context;
 import com.azure.search.documents.indexes.models.SearchIndex;
-import com.azure.search.documents.models.*;
+import com.azure.search.documents.models.IndexingResult;
+import com.azure.search.documents.models.QueryType;
+import com.azure.search.documents.models.SearchOptions;
+import com.azure.search.documents.models.SemanticSearchOptions;
+import com.azure.search.documents.models.VectorSearchOptions;
+import com.azure.search.documents.models.VectorizedQuery;
 import com.azure.search.documents.util.SearchPagedIterable;
 import dev.langchain4j.data.embedding.Embedding;
 import dev.langchain4j.data.segment.TextSegment;
@@ -79,7 +84,8 @@ public class AzureAiSearchContentRetriever extends AbstractAzureAiSearchEmbeddin
             double minScore,
             AzureAiSearchQueryType azureAiSearchQueryType,
             AzureAiSearchFilterMapper filterMapper,
-            Filter filter) {
+            Filter filter,
+            AzureAiSearchFieldToMetadataMapper azureAiSearchFieldToMetadataMapper) {
         ensureNotNull(endpoint, "endpoint");
         ensureTrue(
                 (keyCredential != null && tokenCredential == null)
@@ -128,6 +134,11 @@ public class AzureAiSearchContentRetriever extends AbstractAzureAiSearchEmbeddin
         this.minScore = minScore;
         this.filter = filter;
         this.searchFilter = this.filterMapper.map(filter);
+        if (azureAiSearchFieldToMetadataMapper == null) {
+            this.fieldToMetadataMapper = new DefaultAzureAiSearchFieldToMetadataMapper();
+        } else {
+            this.fieldToMetadataMapper = azureAiSearchFieldToMetadataMapper;
+        }
     }
 
     /**
@@ -258,7 +269,7 @@ public class AzureAiSearchContentRetriever extends AbstractAzureAiSearchEmbeddin
                         .setVectorSearchOptions(new VectorSearchOptions().setQueries(vectorizedQuery))
                         .setSemanticSearchOptions(
                                 new SemanticSearchOptions().setSemanticConfigurationName(SEMANTIC_SEARCH_CONFIG_NAME))
-                        .setQueryType(com.azure.search.documents.models.QueryType.SEMANTIC)
+                        .setQueryType(QueryType.SEMANTIC)
                         .setTop(maxResults)
                         .setFilter(searchFilter),
                 Context.NONE);
@@ -311,6 +322,8 @@ public class AzureAiSearchContentRetriever extends AbstractAzureAiSearchEmbeddin
         private Filter filter;
 
         private AzureAiSearchFilterMapper filterMapper;
+
+        private AzureAiSearchFieldToMetadataMapper fieldToMetadataMapper;
 
         /**
          * Sets the Azure AI Search endpoint. This is a mandatory parameter.
@@ -458,6 +471,11 @@ public class AzureAiSearchContentRetriever extends AbstractAzureAiSearchEmbeddin
             return this;
         }
 
+        public Builder fieldToMetadataMapper(AzureAiSearchFieldToMetadataMapper fieldToMetadataMapper) {
+            this.fieldToMetadataMapper = fieldToMetadataMapper;
+            return this;
+        }
+
         public AzureAiSearchContentRetriever build() {
             return new AzureAiSearchContentRetriever(
                     endpoint,
@@ -472,7 +490,8 @@ public class AzureAiSearchContentRetriever extends AbstractAzureAiSearchEmbeddin
                     minScore,
                     azureAiSearchQueryType,
                     filterMapper,
-                    filter);
+                    filter,
+                    fieldToMetadataMapper);
         }
     }
 }
